@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -15,17 +14,24 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.Random;
 
 public class Main extends Application {
+
+    // Main window width and height
+    int windowHeight = 800;
+    int windowWidth = 1310;
+
+    // Card width and height
+    int cardWidth = 120;
+    int cardHeight = 140;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         // Max and min values for randomizing
-        int max = 10;
-        int min = 1;
+        int max = 5;
+        int min = -5;
 
         // Creating our UI elements and Card variables. It is convenient to use arrays for neatness and
         // so we can avoid lengthy code and use a for loop for initializing
@@ -45,11 +51,16 @@ public class Main extends Application {
             cardSlots[i] = new StackPane();
 
             cardOrganizerPanes[i] = new GridPane();
-            cardOrganizerPanes[i].setPadding(new Insets(10,10,10,10));
+            cardOrganizerPanes[i].setHgap(10);
+            cardOrganizerPanes[i].setVgap(10);
+            cardOrganizerPanes[i].setPadding(new Insets(20,20,20,20));
 
-            // Generating numbers to be sent into the card values
+            // Generating numbers to be sent into the card values making sure it's not 0 for hand cards
             Random rand = new Random();
             int randomNum = rand.nextInt((max - min) + 1) + min;
+            while (randomNum == 0){
+                randomNum = rand.nextInt((max - min) + 1) + min;
+            }
 
             // Creating cards with their values and attaching text and rectangles to them
             cards[i] = new Card(randomNum);
@@ -69,8 +80,8 @@ public class Main extends Application {
 
             // This section is where we organize the UI elements into specific slots to make things neater, making sure
             // buttons and text aren't overlapping
-            cardOrganizerPanes[i].add(cards[i].text, 0,0,1,1);
-            cardOrganizerPanes[i].add(reverseSignButtons[i], 0,2,1,1);
+            cardOrganizerPanes[i].add(cards[i].text, 2,1,2,1);
+            cardOrganizerPanes[i].add(reverseSignButtons[i], 1,2,2,1);
             cardSlots[i].getChildren().addAll(cards[i].rectangle, cardOrganizerPanes[i]);
         }
 
@@ -103,12 +114,12 @@ public class Main extends Application {
          */
         GridPane playingField = new GridPane();
         playingField.add(playerOneHand,0,0,4,1);
-        playingField.add(playerTwoHand,4,0, 4,1);
+        playingField.add(playerTwoHand,5,0, 4,1);
 
         /**
          * Must make a scene to display things on the stage
          */
-        Scene scene = new Scene(playingField, 1024, 800, true);
+        Scene scene = new Scene(playingField, windowWidth, windowHeight, true);
 
         /**
          * Making our stage display our scene.
@@ -134,8 +145,8 @@ public class Main extends Application {
      */
     public Rectangle MakeRectangle(){
         Rectangle rectangle = new Rectangle();
-        rectangle.setWidth(200);
-        rectangle.setHeight(350);
+        rectangle.setWidth(cardWidth);
+        rectangle.setHeight(cardHeight);
         return rectangle;
     }
 
